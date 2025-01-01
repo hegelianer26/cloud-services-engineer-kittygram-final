@@ -120,12 +120,11 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-
     - name: Create .env file
       run: echo "${{ secrets.DEPLOY_INFO }}" > .env
 
     - name: Copy .env file to server
-      run: scp .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER_IP }}:~/kittygram/.env
+      run: scp -o "StrictHostKeyChecking=no" .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER_IP }}:~/kittygram/.env
 
     - name: Copy docker-compose.yml to server
       run: scp docker-compose.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER_IP }}:~/kittygram/docker-compose.yml
