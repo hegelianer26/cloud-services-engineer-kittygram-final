@@ -120,7 +120,6 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-
     - name: Create .env file
       run: echo "${{ secrets.DEPLOY_INFO }}" > .env
 
@@ -131,7 +130,7 @@ jobs:
       run: scp docker-compose.production.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER_IP }}:~/kittygram/docker-compose.yml
 
     - name: Deploy with Docker Compose
-      run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER_IP }} 'cd ~/kittygram && docker-compose pull && docker-compose up -d'
+      run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER_IP }} 'cd ~/kittygram && docker compose pull && docker compose up -d'
 
 
   send_message:
