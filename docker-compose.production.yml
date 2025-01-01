@@ -15,8 +15,9 @@ services:
     env_file:
       - .env
 
+
   backend:
-    build: ./backend
+    image: hegelianer/kittygram_backend:latest
     restart: always
     depends_on:
       - db
@@ -26,17 +27,18 @@ services:
       - static:/app/collected_static/
       - media:/app/media/
 
-
+      
   frontend:
-    build: ./frontend
-    restart: always     
+    image: hegelianer/kittygram_frontend:latest
+    restart: always
     volumes:
       - static:/usr/share/nginx/html
     depends_on:
       - backend
 
+
   nginx:
-    build: ./nginx
+    image: hegelianer/kittygram_gateway:latest
     container_name: gateway
     ports:
       - "80:80"
