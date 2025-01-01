@@ -112,8 +112,10 @@ jobs:
     # needs: [build_backend_and_push_to_docker_hub, build_forntend_and_push_to_docker_hub, build_gateway_and_push_to_docker_hub]
 
     steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+      
     - name: Set up SSH
-      uses: actions/checkout@v4
       uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
