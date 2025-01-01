@@ -129,7 +129,6 @@ jobs:
     - name: Copy docker-compose.yml to server
       run: scp docker-compose.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER_IP }}:~/kittygram/docker-compose.yml
 
-
     - name: Deploy with Docker Compose
       run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER_IP }} 'cd ~/kittygram && docker-compose pull && docker-compose up -d'
 
