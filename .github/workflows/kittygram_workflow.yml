@@ -123,7 +123,6 @@ jobs:
     - name: Create .env file
       run: echo "${{ secrets.DEPLOY_INFO }}" > .env
 
-
     - name: Copy .env file to server
       run: scp .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER_IP }}:~/kittygram/.env
 
