@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  backend:
+    build: ./backend
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes:
+      - static:/app/collected_static/
+      - media:/app/media/
+
+
+  frontend:
+    build: ./frontend
+       
+    volumes:
+      - static:/usr/share/nginx/html
+    depends_on:
+      - backend
+
+  nginx:
+    build: ./nginx
+    container_name: gateway
+    ports:
+      - "80:80"
+    volumes:
+      - static:/var/html/collected_static/
+      - media:/var/html/media/
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  pg_data:
+  static:
+  media:
