@@ -133,10 +133,6 @@ jobs:
       run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_SERVER_IP }} 'cd ~/kittygram && docker compose pull && docker compose up -d'
 
 
-  final_test:
-    runs-on: ubuntu-latest
-
-
   send_message:
     runs-on: ubuntu-latest
     needs: final_test
