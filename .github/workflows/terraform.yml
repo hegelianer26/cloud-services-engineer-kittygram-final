@@ -1,0 +1,67 @@
+name: Terraform Trigger Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Select the Terraform action'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy 
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v2
+          with:
+            terraform_version: '1.11.3'
+        
+        - name: Terraform Init
+          working-directory: ./infra
+          run: terraform init
+          env:
+            YC_TOKEN: ${{ secrets.YC_TOKEN }}
+            YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
+            YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
+
+
+        - name: Terraform Plan
+          working-directory: ./infra
+          if: ${{ github.event.inputs.action == 'plan' }}
+          run: terraform plan
+          env:
+            YC_TOKEN: ${{ secrets.YC_TOKEN }}
+            YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
+            YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
+    
+        - name: Terraform Apply
+          working-directory: ./infra
+          if: ${{ github.event.inputs.action == 'apply' }}
+          run: terraform apply -auto-approve
+          env:
+            YC_TOKEN: ${{ secrets.YC_TOKEN }}
+            YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
+            YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
+            TF_admin_ssh_key: "${{ secrets.ADMIN_SSH_PUBLIC_KEY }}"
+            TF_deploy_ssh_key: "${{ secrets.DEPLOY_SSH_PUBLIC_KEY }}"
+
+        - name: Terraform Destroy
+          working-directory: ./infra
+          if: ${{ github.event.inputs.action == 'destroy' }}
+          run: terraform destroy -auto-approve
+          env:
+            YC_TOKEN: ${{ secrets.YC_TOKEN }}
+            YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
+            YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
+
+        - name: Get Terraform Outputs
+          run: |
+            VM_IP=$(terraform output -raw vm_ip)
+            echo "VM_IP=$VM_IP" >> $GITHUB_ENV
+        
