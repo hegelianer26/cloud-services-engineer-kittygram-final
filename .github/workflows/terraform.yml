@@ -30,7 +30,7 @@ jobs:
             sparse-checkout-cone-mode: false
         
         - name: Set up Service Account Key
-          run: echo "${{ secrets.YC_SERVICE_ACCOUNT_KEY }}" > key.json
+          run: printf '%s' '${{ secrets.YC_SERVICE_ACCOUNT_KEY }}' > key.json
     
         - name: Terraform Init
           run: terraform init
