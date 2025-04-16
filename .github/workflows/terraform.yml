@@ -22,13 +22,14 @@ jobs:
       TF_VAR_folder_id: ${{ secrets.YC_FOLDER_ID }}
       TF_VAR_deploy_ssh_key: ${{ secrets.DEPLOY_SSH_KEY }}
       TF_VAR_admin_ssh_key: ${{ secrets.ADMIN_SSH_KEY }}
-
+      AWS_ACCESS_KEY_ID: ${{ secrets.YC_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_SECRET_ACCESS_KEY }}
 
     steps:
         - name: Setup Terraform
           uses: hashicorp/setup-terraform@v2
           with:
-            terraform_version: '1.7.5'
+            terraform_version: '1.11.3'
         
         - name: Check out infra directory only
           uses: actions/checkout@v3
@@ -36,8 +37,7 @@ jobs:
             sparse-checkout: |
                 infra
             sparse-checkout-cone-mode: false
-
-            
+        
         - name: Set up Service Account Key
           run: |
                 cat <<EOF > key.json
@@ -67,8 +67,8 @@ jobs:
           working-directory: ./infra
           if: ${{ github.event.inputs.action == 'apply' }}
           run: |
-            VM_IP=$(terraform output -raw public-ip-address-for-vm-1)
-            echo "VM_IP=$VM_IP" >> $GITHUB_ENV
+            VM_IP=$(terraform output -raw public-ip-address-for-vm-1 | tr -d '\n' | tr -d '\r')
+            echo "VM_IP=${VM_IP}" >> $GITHUB_ENV
         
         - name: Send message in tg
           uses: appleboy/telegram-action@master
@@ -82,3 +82,14 @@ jobs:
               Комментарий: ${{ github.event.commits[0].message }}
               Ссылка на коммит: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
         
+        - name: Send message in tg
+          uses: appleboy/telegram-action@master
+          if: ${{ github.event.inputs.action == 'destroy' }}
+          with:
+            to: ${{ secrets.TELEGRAM_TO }}
+            token: ${{ secrets.TELEGRAM_TOKEN }}
+            message: >-
+              VM удалена!
+              Автор: ${{ github.actor }}
+              Комментарий: ${{ github.event.commits[0].message }}
+              Ссылка на коммит: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
