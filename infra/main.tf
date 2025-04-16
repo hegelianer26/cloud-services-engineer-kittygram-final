@@ -20,31 +20,6 @@ data "yandex_compute_image" "ubuntu-24-04" {
   family    = "ubuntu-2204-lts"
 }
 
-resource "yandex_kms_symmetric_key" "key-a" {
-  name              = "key-a"
-  description       = "Key for encryption in backet" 
-  default_algorithm = "AES_128"
-  rotation_period   = "8760h"
-}
-
-
-resource "yandex_storage_bucket" "bucket" {
-  bucket    = var.bucket_name
-
-  versioning {
-    enabled = true
-  }
-
-  server_side_encryption_configuration {
-  rule {
-    apply_server_side_encryption_by_default {
-      kms_master_key_id = yandex_kms_symmetric_key.key-a.id
-      sse_algorithm = "aws:kms"
-    }
-  }
-}
-}
-
 resource "yandex_compute_instance" "this" {
   name        = var.instance_name
   platform_id = "standard-v1"

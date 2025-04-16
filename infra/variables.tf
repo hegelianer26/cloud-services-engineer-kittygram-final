@@ -34,12 +34,6 @@ variable "instance_name" {
   default     = "test-instance"
 }
 
-variable "bucket_name" {
-  description = "Name of the S3 bucket for Terraform state"
-  type        = string
-  default     = "ARTV-terraform-state-bucket"
-}
-
 variable "security_group_name" {
   description = "Name of the security group"
   type        = string
@@ -58,3 +52,8 @@ variable "subnet_name" {
   default     = "test-subnet"
 }
 
+variable "bucket_name" {
+  description = "Name of the S3 bucket for Terraform state"
+  type        = string
+  default     = "artv-terraform-state-bucket"
+}
