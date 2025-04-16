@@ -33,6 +33,7 @@ jobs:
           run: printf '%s' '${{ secrets.YC_SERVICE_ACCOUNT_KEY }}' > key.json
     
         - name: Terraform Init
+          working-directory: ./infra
           run: terraform init
           env:
             TF_VAR_service_account_key_file: key.json
@@ -40,10 +41,12 @@ jobs:
             TF_VAR_folder_id: ${{ secrets.YC_FOLDER_ID }}
 
         - name: Terraform Plan
+          working-directory: ./infra
           if: ${{ github.event.inputs.action == 'plan' }}
           run: terraform plan
     
         - name: Terraform Apply
+          working-directory: ./infra
           if: ${{ github.event.inputs.action == 'apply' }}
           run: terraform apply -auto-approve
 
