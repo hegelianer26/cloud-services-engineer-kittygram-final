@@ -39,7 +39,7 @@ resource "yandex_storage_bucket" "bucket" {
   rule {
     apply_server_side_encryption_by_default {
       kms_master_key_id = yandex_kms_symmetric_key.key-a.id
-      sse_algorithm = "AES256"
+      sse_algorithm = "aws:kms"
     }
   }
 }
