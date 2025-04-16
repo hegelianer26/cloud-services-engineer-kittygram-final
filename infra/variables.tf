@@ -51,9 +51,3 @@ variable "subnet_name" {
   type        = string
   default     = "test-subnet"
 }
-
-variable "bucket_name" {
-  description = "Name of the S3 bucket for Terraform state"
-  type        = string
-  default     = "artv-terraform-state-bucket"
-}
