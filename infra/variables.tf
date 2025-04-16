@@ -37,7 +37,7 @@ variable "instance_name" {
 variable "bucket_name" {
   description = "Name of the S3 bucket for Terraform state"
   type        = string
-  default     = "terraform-state-bucket"
+  default     = "ARTV-terraform-state-bucket"
 }
 
 variable "security_group_name" {
