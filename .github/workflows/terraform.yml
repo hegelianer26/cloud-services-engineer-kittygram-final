@@ -22,8 +22,7 @@ jobs:
       TF_VAR_folder_id: ${{ secrets.YC_FOLDER_ID }}
       TF_VAR_deploy_ssh_key: ${{ secrets.DEPLOY_SSH_KEY }}
       TF_VAR_admin_ssh_key: ${{ secrets.ADMIN_SSH_KEY }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.YC_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_SECRET_ACCESS_KEY }}
+
 
     steps:
         - name: Setup Terraform
@@ -37,7 +36,12 @@ jobs:
             sparse-checkout: |
                 infra
             sparse-checkout-cone-mode: false
-        
+
+        - name: Create backend.tfvars
+          run: |
+            echo "access_key = '${{ secrets.YC_ACCESS_KEY_ID }}'" > ./infra/backend.tfvars
+            echo "secret_key = '${{ secrets.YC_SECRET_ACCESS_KEY }}'" >> ./infra/backend.tfvars
+          
         - name: Set up Service Account Key
           run: |
                 cat <<EOF > key.json
