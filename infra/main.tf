@@ -4,19 +4,37 @@ resource "yandex_vpc_network" "this" {
 
 resource "yandex_vpc_subnet" "this" {
   name = "test-ru-central1-a"
-  zone           = "ru-central1-a"
+  zone           = "ru-central1"
   network_id     = yandex_vpc_network.this.id
   v4_cidr_blocks = ["192.168.0.0/28"]
 }
 
 data "yandex_compute_image" "ubuntu-20-04" {
-  family = "ubuntu-2004-lts"
+  family    = "ubuntu-2004-lts"
+}
+
+resource "yandex_storage_bucket" "bucket" {
+  bucket    = var.bucket_name
+  location  = "ru-central1"
+  storage_class = "standard"
+
+  versioning {
+    enabled = true
+  }
+
+  server_side_encryption_configuration {
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
 }
 
 resource "yandex_compute_instance" "this" {
   name        = "test"
   platform_id = "standard-v1"
-  zone        = "ru-central1-a"
+  zone        = "ru-central1"
 
   resources {
     cores  = 2
@@ -42,3 +60,31 @@ resource "yandex_compute_instance" "this" {
     })
   }
 }
+
+resource "yandex_vpc_security_group" "test-sg" {
+  name        = "Test security group"
+  description = "Description for security group"
+  network_id  = yandex_vpc_network.this.id
+
+  ingress {
+    protocol       = "TCP"
+    description    = "Разрешаем входящий SSH трафик"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    port           = 22
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "Разрешаем входящий HTTP трафик"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    port           = 80
+  }
+
+  egress {
+    protocol       = "ANY"
+    description    = "Разрешаем весь исходящий трафик"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    from_port      = 0
+    to_port        = 65535
+  }
+

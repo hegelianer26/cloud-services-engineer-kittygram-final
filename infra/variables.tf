@@ -27,3 +27,9 @@ variable "zone" {
   description = "Default availability zone"
   default     = "ru-central1-a"
 }
+
+variable "bucket_name" {
+  description = "Name of the S3 bucket for Terraform state"
+  type        = string
+  default     = "terraform-state-bucket"
+}
