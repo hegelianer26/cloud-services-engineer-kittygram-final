@@ -30,8 +30,6 @@ resource "yandex_kms_symmetric_key" "key-a" {
 
 resource "yandex_storage_bucket" "bucket" {
   bucket    = var.bucket_name
-  region  = "ru-central1-a"
-  storage_class = "STANDART"
 
   versioning {
     enabled = true
