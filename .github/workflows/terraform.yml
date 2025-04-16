@@ -31,7 +31,10 @@ jobs:
         
         - name: Set up Service Account Key
           run: printf '%s' '${{ secrets.YC_SERVICE_ACCOUNT_KEY }}' > key.json
-    
+
+        - name: Debug key.json
+          run: cat key.json
+
         - name: Terraform Init
           working-directory: ./infra
           run: terraform init
@@ -54,7 +57,7 @@ jobs:
             TF_VAR_deploy_ssh_key: ${{ secrets.DEPLOY_SSH_KEY }}
             TF_VAR_admin_ssh_key: ${{ secrets.ADMIN_SSH_KEY }}
 
-            
+
         - name: Terraform Apply
           working-directory: ./infra
           if: ${{ github.event.inputs.action == 'apply' }}
