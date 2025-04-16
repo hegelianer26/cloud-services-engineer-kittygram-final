@@ -32,7 +32,7 @@ resource "yandex_storage_bucket" "bucket" {
 }
 
 resource "yandex_compute_instance" "this" {
-  name        = "test"
+  name        = var.instance_name
   platform_id = "standard-v1"
   zone        = "ru-central1"
 
@@ -62,8 +62,7 @@ resource "yandex_compute_instance" "this" {
 }
 
 resource "yandex_vpc_security_group" "test-sg" {
-  name        = "Test security group"
-  description = "Description for security group"
+  name        = var.security_group_name
   network_id  = yandex_vpc_network.this.id
 
   ingress {
@@ -87,4 +86,4 @@ resource "yandex_vpc_security_group" "test-sg" {
     from_port      = 0
     to_port        = 65535
   }
-
+}

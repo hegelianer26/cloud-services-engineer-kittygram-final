@@ -28,8 +28,20 @@ variable "zone" {
   default     = "ru-central1-a"
 }
 
+variable "instance_name" {
+  description = "Name of the Yandex Compute Instance"
+  type        = string
+  default     = "test-instance"
+}
+
 variable "bucket_name" {
   description = "Name of the S3 bucket for Terraform state"
   type        = string
   default     = "terraform-state-bucket"
+}
+
+variable "security_group_name" {
+  description = "Name of the security group"
+  type        = string
+  default     = "test-sg"
 }
