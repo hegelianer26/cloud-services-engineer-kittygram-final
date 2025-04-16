@@ -1,7 +1,7 @@
 resource "yandex_vpc_address" "addr" {
   name = "vm-adress"
   external_ipv4_address {
-    zone_id = "test-ru-central1-a"
+    zone_id = var.zone
   }
 }
 
@@ -11,13 +11,13 @@ resource "yandex_vpc_network" "this" {
 
 resource "yandex_vpc_subnet" "this" {
   name = var.subnet_name
-  zone           = "ru-central1-a"
+  zone           = var.zone
   network_id     = yandex_vpc_network.this.id
   v4_cidr_blocks = ["192.168.0.0/28"]
 }
 
-data "yandex_compute_image" "ubuntu-20-04" {
-  family    = "ubuntu-2004-lts"
+data "yandex_compute_image" "ubuntu-24-04" {
+  family    = "ubuntu-2204-lts"
 }
 
 resource "yandex_kms_symmetric_key" "key-a" {
@@ -48,7 +48,7 @@ resource "yandex_storage_bucket" "bucket" {
 resource "yandex_compute_instance" "this" {
   name        = var.instance_name
   platform_id = "standard-v1"
-  zone        = "ru-central1-a"
+  zone        = var.zone
 
   resources {
     cores  = 2
@@ -57,7 +57,7 @@ resource "yandex_compute_instance" "this" {
 
   boot_disk {
     initialize_params {
-      image_id = data.yandex_compute_image.ubuntu-20-04.id
+      image_id = data.yandex_compute_image.ubuntu-24-04.id
       size = 10
     }
   }

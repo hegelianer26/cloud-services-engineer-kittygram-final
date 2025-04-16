@@ -57,3 +57,9 @@ variable "subnet_name" {
   type        = string
   default     = "test-subnet"
 }
+
+variable "zone" {
+  description = "Availability zone for the instance"
+  type        = string
+  default     = "ru-central1-a"
+}
