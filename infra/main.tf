@@ -43,7 +43,7 @@ resource "yandex_compute_instance" "this" {
 
   boot_disk {
     initialize_params {
-      image_id = "fd82tb3u07rkdkfte3dn"
+      image_id = data.yandex_compute_image.ubuntu-20-04.id
       size = 10
     }
   }
@@ -53,6 +53,8 @@ resource "yandex_compute_instance" "this" {
     nat       = true
   }
 
+  security_group_ids = [yandex_vpc_security_group.this.id]
+
   metadata = {
     user-data = templatefile("cloud-init.yaml", {
         admin_ssh_key = var.admin_ssh_key
@@ -61,9 +63,10 @@ resource "yandex_compute_instance" "this" {
   }
 }
 
-resource "yandex_vpc_security_group" "test-sg" {
+resource "yandex_vpc_security_group" "this" {
   name        = var.security_group_name
   network_id  = yandex_vpc_network.this.id
+
 
   ingress {
     protocol       = "TCP"
