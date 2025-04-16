@@ -6,11 +6,11 @@ resource "yandex_vpc_address" "addr" {
 }
 
 resource "yandex_vpc_network" "this" {
-  name = "test"
+  name = var.network_name
 }
 
 resource "yandex_vpc_subnet" "this" {
-  name = "test-ru-central1-a"
+  name = var.subnet_name
   zone           = "ru-central1-a"
   network_id     = yandex_vpc_network.this.id
   v4_cidr_blocks = ["192.168.0.0/28"]
@@ -20,10 +20,18 @@ data "yandex_compute_image" "ubuntu-20-04" {
   family    = "ubuntu-2004-lts"
 }
 
+resource "yandex_kms_symmetric_key" "key-a" {
+  name              = "key-a"
+  description       = "Key for encryption in backet" 
+  default_algorithm = "AES_128"
+  rotation_period   = "8760h"
+}
+
+
 resource "yandex_storage_bucket" "bucket" {
   bucket    = var.bucket_name
-  location  = "ru-central1-a"
-  storage_class = "standard"
+  region  = "ru-central1-a"
+  storage_class = "STANDART"
 
   versioning {
     enabled = true
@@ -32,6 +40,7 @@ resource "yandex_storage_bucket" "bucket" {
   server_side_encryption_configuration {
   rule {
     apply_server_side_encryption_by_default {
+      kms_master_key_id = yandex_kms_symmetric_key.key-a.id
       sse_algorithm = "AES256"
     }
   }
@@ -62,8 +71,6 @@ resource "yandex_compute_instance" "this" {
     security_group_ids = [yandex_vpc_security_group.this.id]
   }
 
-
-  security_group_ids = [yandex_vpc_security_group.this.id]
 
   metadata = {
     user-data = templatefile("cloud-init.yaml", {

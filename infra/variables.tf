@@ -45,3 +45,15 @@ variable "security_group_name" {
   type        = string
   default     = "test-sg"
 }
+
+variable "network_name" {
+  description = "Name of the VPC network"
+  type        = string
+  default     = "test-network"
+}
+
+variable "subnet_name" {
+  description = "Name of the VPC subnet"
+  type        = string
+  default     = "test-subnet"
+}
