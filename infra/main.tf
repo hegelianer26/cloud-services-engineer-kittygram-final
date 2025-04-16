@@ -1,10 +1,17 @@
+resource "yandex_vpc_address" "addr" {
+  name = "vm-adress"
+  external_ipv4_address {
+    zone_id = "test-ru-central1-a"
+  }
+}
+
 resource "yandex_vpc_network" "this" {
   name = "test"
 }
 
 resource "yandex_vpc_subnet" "this" {
   name = "test-ru-central1-a"
-  zone           = "ru-central1"
+  zone           = "ru-central1-a"
   network_id     = yandex_vpc_network.this.id
   v4_cidr_blocks = ["192.168.0.0/28"]
 }
@@ -15,7 +22,7 @@ data "yandex_compute_image" "ubuntu-20-04" {
 
 resource "yandex_storage_bucket" "bucket" {
   bucket    = var.bucket_name
-  location  = "ru-central1"
+  location  = "ru-central1-a"
   storage_class = "standard"
 
   versioning {
@@ -34,7 +41,7 @@ resource "yandex_storage_bucket" "bucket" {
 resource "yandex_compute_instance" "this" {
   name        = var.instance_name
   platform_id = "standard-v1"
-  zone        = "ru-central1"
+  zone        = "ru-central1-a"
 
   resources {
     cores  = 2
@@ -51,7 +58,10 @@ resource "yandex_compute_instance" "this" {
   network_interface {
     subnet_id = yandex_vpc_subnet.this.id
     nat       = true
+    nat_ip_address = yandex_vpc_address.addr.external_ipv4_address[0].address
+    security_group_ids = [yandex_vpc_security_group.this.id]
   }
+
 
   security_group_ids = [yandex_vpc_security_group.this.id]
 
