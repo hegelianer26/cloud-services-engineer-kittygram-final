@@ -37,8 +37,8 @@ resource "yandex_compute_instance" "this" {
 
   metadata = {
     user-data = templatefile("cloud-init.yaml", {
-        admin_ssh_key = var.TF_admin_ssh_key
-        deploy_ssh_key = var.TF_deploy_ssh_key
+        admin_ssh_key = var.admin_ssh_key
+        deploy_ssh_key = var.deploy_ssh_key
     })
   }
 }
