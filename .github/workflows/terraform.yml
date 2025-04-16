@@ -35,6 +35,18 @@ jobs:
                 ${{ secrets.YC_SERVICE_ACCOUNT_KEY }}
                 EOF
 
+        - name: Check File Permissions
+          run: ls -l key.json
+
+        - name: Check File Size
+          run: wc -c key.json
+
+        - name: Validate JSON
+          run: |
+            sudo apt-get update && sudo apt-get install -y jq
+            jq empty key.json || echo "Invalid JSON"
+
+
         - name: Terraform Init
           working-directory: ./infra
           run: terraform init
