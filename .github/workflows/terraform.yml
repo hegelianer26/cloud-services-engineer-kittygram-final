@@ -70,15 +70,4 @@ jobs:
               Автор: ${{ github.actor }}
               Комментарий: ${{ github.event.commits[0].message }}
               Ссылка на коммит: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
-
-        - name: Send message in tg
-          uses: appleboy/telegram-action@master
-          if: ${{ github.event.inputs.action == 'destroy' }}
-          with:
-            to: ${{ secrets.TELEGRAM_TO }}
-            token: ${{ secrets.TELEGRAM_TOKEN }}
-            message: >-
-              VM удалена!
-              Автор: ${{ github.actor }}
-              Комментарий: ${{ github.event.commits[0].message }}
-              Ссылка на коммит: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+        
