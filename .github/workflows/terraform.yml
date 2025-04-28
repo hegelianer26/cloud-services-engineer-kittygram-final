@@ -85,7 +85,7 @@ jobs:
             to: ${{ secrets.TELEGRAM_TO }}
             token: ${{ secrets.TELEGRAM_TOKEN }}
             message: >-
-              VM создана с IP: ${{ env.VM_IP }}
+              VM создана с IP: ${VM_IP}
               Автор: ${{ github.actor }}
               Комментарий: ${{ github.event.commits[0].message }}
               Ссылка на коммит: https://github.com/${{ github.repository }}/commit/${{ github.sha }}

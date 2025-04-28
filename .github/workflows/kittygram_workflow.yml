@@ -118,7 +118,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Download VM_IP artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: vm-ip
         path: ./downloaded_artifact
