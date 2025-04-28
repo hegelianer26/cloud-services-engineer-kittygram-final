@@ -71,6 +71,7 @@ jobs:
             echo "${VM_IP}"  > ./infra/vm_ip.txt
 
         - name: Upload VM_IP artifact
+          if: ${{ github.event.inputs.action == 'apply' }}
           uses: actions/upload-artifact@v3
           with:
            name: vm-ip
