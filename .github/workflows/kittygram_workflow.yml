@@ -125,6 +125,9 @@ jobs:
     - name: Create .env file
       run: echo "${{ secrets.DEPLOY_INFO }}" > .env
 
+    - name: Create directory on the server
+      run: ssh -o "StrictHostKeyChecking=no" ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.SSH_SERVER_IP }} 'mkdir -p /home/kittygram'
+  
     - name: Copy .env file to server
       run: scp -o "StrictHostKeyChecking=no" .env ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.SSH_SERVER_IP }}:/home/kittygram/.env
 
