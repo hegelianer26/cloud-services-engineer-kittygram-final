@@ -137,14 +137,13 @@ jobs:
       run: echo "${{ secrets.DEPLOY_INFO }}" > .env
 
     - name: Copy .env file to server
-      run: scp -o "StrictHostKeyChecking=no" .env ${{ secrets.DEPLOY_SSH_USER }}@${{ env.VM_IP }}:/home/kittygram/.env
+      run: scp -o "StrictHostKeyChecking=no" .env ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.SSH_SERVER_IP }}:/home/kittygram/.env
 
     - name: Copy docker-compose.yml to server
-      run: scp docker-compose.production.yml ${{ secrets.DEPLOY_SSH_USER }}@${{ env.VM_IP }}:/home/kittygram/docker-compose.yml
+      run: scp docker-compose.production.yml ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.SSH_SERVER_IP }}:/home/kittygram/docker-compose.yml
 
     - name: Deploy with Docker Compose
-      run: ssh ${{ secrets.DEPLOY_SSH_USER }}@${{ env.VM_IP }} 'cd /home/kittygram && docker compose pull && docker compose up -d'
-
+      run: ssh ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.SSH_SERVER_IP }} 'cd /home/kittygram && docker compose pull && docker compose up -d'
 
   send_message:
     runs-on: ubuntu-latest
