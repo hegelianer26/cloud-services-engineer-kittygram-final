@@ -28,3 +28,8 @@ users:
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     ssh-authorized-keys:
       - ${admin_ssh_key}
+
+runcmd:
+  - mkdir -p /home/kittygram
+  - chown git_hub_user:git_hub_user /home/kittygram
+  - chmod 755 /home/kittygram
