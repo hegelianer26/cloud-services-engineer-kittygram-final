@@ -24,5 +24,3 @@ dockerhub_username: ваш_логин_на_докерхабе
 - В корне проекта есть файл `kittygram_workflow.yml`.
 
 
-
-НОВОЕ ОПИСАНИЕ
